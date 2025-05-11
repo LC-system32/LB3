@@ -7,13 +7,13 @@ namespace LB1
     {
         static void Main(string[] args)
         {
-            int prodLeft = 10;
-            int consLeft = 10;
+            int prodLeft = 15;
+            int consLeft = 15;
 
-            Manager manager = new Manager(prodLeft, consLeft);
-
-            int consumerCount = 2;
-            int producerCount = 1;
+            int consumerCount = 5;
+            int producerCount = 3;
+            
+            Manager manager = new Manager(prodLeft, consLeft, producerCount);
 
             for (int i = 1; i <= producerCount; i++)
             {

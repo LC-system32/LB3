@@ -23,26 +23,26 @@ namespace LB1
         {
             for (int i = 0; i < countProduct; i++)
             {
-                Thread.Sleep(2000);
-                if (manager.consLeft <= 0 || manager.isProducingWorkDone)
-                {
-                    manager.fullStock.Release();
-                    break;
-                }
+                Thread.Sleep(1000);
 
                 manager.fullStock.WaitOne();
                 manager.takeItem.WaitOne();
 
-                Console.WriteLine("Consumer " + idConsumer + " taken from stock " + manager.ItemStock);
+                if (manager.StockSize > 0)
+                {
+                    string product = manager.ItemStock;
+                    Console.WriteLine($"Consumer {idConsumer} taken from stock {product}");
 
-                manager.takeItem.Release();
-                manager.emptyStock.Release();
-
-
-
+                    manager.takeItem.Release();
+                    manager.emptyStock.Release();
+                }
+                else
+                {
+                    manager.takeItem.Release();
+                    break;
+                }
             }
             Console.WriteLine("Consumer " + idConsumer + " has finished work");
-
         }
     }
 }

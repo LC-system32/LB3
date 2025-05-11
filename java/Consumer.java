@@ -15,16 +15,18 @@ public class Consumer extends Thread {
         {
             try {
                 Thread.sleep(2000);
-                if (manager.generalCountProductUsing <= 0 || manager.isProducingWorkDone)
-                {
-                    manager.emptyStock.release();
-                    break;
-                }
-
                 manager.emptyStock.acquire();
                 manager.takeItem.acquire();
 
-                System.out.println("Consumer " + idConsumer + " taken from stock " + manager.getItemStock());
+                if (manager.isProducingWorkDone && manager.getStockSize() == 0) {
+                    manager.takeItem.release();
+                    break;
+                }
+
+                if (manager.getStockSize() > 0 && manager.generalCountProductUsing > 0) {
+                    String item = manager.getItemStock();
+                    System.out.println("Consumer " + idConsumer + " taken from stock " + item);
+                }
 
                 manager.takeItem.release();
                 manager.fullStock.release();

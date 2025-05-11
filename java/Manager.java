@@ -7,10 +7,15 @@ public class Manager
     public Semaphore takeItem;
     public Semaphore emptyStock;
 
-    public volatile int generalCountProductCreate = 10;
-    public volatile int generalCountProductUsing = 10;
+    private int finishedProducers = 0;
+    private final int totalProducers;
+
+    public volatile int generalCountProductCreate;
+    public volatile int generalCountProductUsing;
 
     public volatile boolean isProducingWorkDone = false;
+
+    public volatile int createdProduct = 0;
 
     private ArrayList<String> stock;
 
@@ -31,13 +36,23 @@ public class Manager
         stock.add(item);
     }
 
-    public Manager(int prodLeft, int consLeft) {
-        fullStock = new Semaphore(5);
+    public Manager(int prodLeft, int consLeft, int threadNum, int totalProducers) {
+        fullStock = new Semaphore(2);
         takeItem = new Semaphore(1);
         emptyStock = new Semaphore(0);
         stock = new ArrayList<String>();
 
         this.generalCountProductCreate = prodLeft;
         this.generalCountProductUsing = consLeft;
+
+        this.totalProducers = totalProducers;
+    }
+
+    public synchronized void producerFinished() {
+        finishedProducers++;
+        if (finishedProducers == totalProducers) {
+            isProducingWorkDone = true;
+            emptyStock.release();
+        }
     }
 }

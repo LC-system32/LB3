@@ -29,6 +29,7 @@ namespace LB1
                     manager.isProducingWorkDone = true;
                     break;
                 }
+
                 Thread.Sleep(1000);
 
                 manager.emptyStock.WaitOne();
@@ -43,6 +44,7 @@ namespace LB1
 
             }
             Console.WriteLine("Producer " + idProducer + " has finished work");
+            manager.ProducerFinished();
         }
     }
 }

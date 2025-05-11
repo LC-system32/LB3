@@ -24,18 +24,20 @@ public class Producer extends Thread {
 
                 Thread.sleep(1000);
                 manager.fullStock.acquire();
+                manager.takeItem.acquire();
+
+                manager.addItemStock("Product " + manager.createdProduct++);
+                System.out.println("Producer " + idProducer + " added to stock product " + manager.createdProduct);
+
                 manager.takeItem.release();
-
-                manager.addItemStock("Product " + i);
-                System.out.println("Producer " + idProducer + " added to stock product " + i);
-
                 manager.emptyStock.release();
-                manager.takeItem.release();
+
             }
             catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
         System.out.println("Producer " + idProducer + " has finished work");
+        manager.producerFinished();
     }
 }
